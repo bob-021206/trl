@@ -1,0 +1,132 @@
+{
+  "issue": "huggingface/trl#7428",
+  "fix_pr": "huggingface/trl#7429",
+  "label": "baseline",
+  "behavior": "buggy",
+  "source_commit": "3ecd0865de9cadd6123e7c8e6964fdbe41b7d4af",
+  "source_dirty": false,
+  "model": "models/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "gpu": "NVIDIA GeForce RTX 3060",
+  "platform": "Linux-5.15.0-198-generic-x86_64-with-glibc2.35",
+  "python": "3.13.18",
+  "torch": "2.13.0+cu130",
+  "vllm": "0.32.0",
+  "transformers": "5.19.0",
+  "peft": "0.21.2",
+  "trl": "1.17.0.dev0",
+  "turns_per_rollout": 2,
+  "dtype": "bfloat16",
+  "summary": {
+    "median_rollout_ms": 1021.882,
+    "median_turn_ms": [
+      483.491,
+      523.372
+    ],
+    "max_peak_allocated_gib": 5.323,
+    "max_peak_reserved_gib": 6.287
+  },
+  "iterations": [
+    {
+      "syncs": 2,
+      "sleeps": 2,
+      "sleeps_after_rollout": 0,
+      "sync_ms": [
+        449.862,
+        398.516
+      ],
+      "turn_ms": [
+        449.876,
+        559.911
+      ],
+      "turn_tokens": [
+        6,
+        18
+      ],
+      "rollout_ms": 1517.59,
+      "peak_allocated_gib": 5.323,
+      "peak_reserved_gib": 6.287
+    },
+    {
+      "syncs": 2,
+      "sleeps": 2,
+      "sleeps_after_rollout": 0,
+      "sync_ms": [
+        380.987,
+        397.118
+      ],
+      "turn_ms": [
+        503.295,
+        511.819
+      ],
+      "turn_tokens": [
+        9,
+        9
+      ],
+      "rollout_ms": 1021.489,
+      "peak_allocated_gib": 5.323,
+      "peak_reserved_gib": 6.287
+    },
+    {
+      "syncs": 2,
+      "sleeps": 2,
+      "sleeps_after_rollout": 0,
+      "sync_ms": [
+        389.412,
+        398.543
+      ],
+      "turn_ms": [
+        483.491,
+        532.055
+      ],
+      "turn_tokens": [
+        5,
+        13
+      ],
+      "rollout_ms": 1021.882,
+      "peak_allocated_gib": 5.323,
+      "peak_reserved_gib": 6.285
+    },
+    {
+      "syncs": 2,
+      "sleeps": 2,
+      "sleeps_after_rollout": 0,
+      "sync_ms": [
+        393.157,
+        398.969
+      ],
+      "turn_ms": [
+        521.564,
+        503.156
+      ],
+      "turn_tokens": [
+        12,
+        7
+      ],
+      "rollout_ms": 1031.353,
+      "peak_allocated_gib": 5.323,
+      "peak_reserved_gib": 6.285
+    },
+    {
+      "syncs": 2,
+      "sleeps": 2,
+      "sleeps_after_rollout": 0,
+      "sync_ms": [
+        388.709,
+        395.542
+      ],
+      "turn_ms": [
+        481.256,
+        523.372
+      ],
+      "turn_tokens": [
+        4,
+        11
+      ],
+      "rollout_ms": 1011.371,
+      "peak_allocated_gib": 5.323,
+      "peak_reserved_gib": 6.285
+    }
+  ],
+  "timing_note": "Real GPU/vLLM measurements; compare only matched hardware, model, workload, and software revisions."
+}

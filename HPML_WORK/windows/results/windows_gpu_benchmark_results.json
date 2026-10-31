@@ -1,0 +1,179 @@
+{
+  "benchmark": "Windows GPU Qwen3 weight-residency emulation (Transformers, not vLLM)",
+  "issue": "huggingface/trl#7428",
+  "fix_pr": "huggingface/trl#7429",
+  "model": "models/Qwen3-0.6B",
+  "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.13.5",
+  "torch": "2.9.0+cu128",
+  "transformers": "5.22.0",
+  "turns": 2,
+  "dtype": "float16",
+  "policies": {
+    "affected_reload_each_turn": [
+      {
+        "weight_reloads": 2,
+        "sleep_calls": 2,
+        "inter_turn_sleeps": 1,
+        "weight_reload_ms": [
+          317.274,
+          329.868
+        ],
+        "sleep_ms": [
+          263.436,
+          269.919
+        ],
+        "generation_ms": [
+          505.728,
+          679.745
+        ],
+        "generated_tokens": [
+          9,
+          12
+        ],
+        "rollout_ms": 2367.083,
+        "peak_allocated_gib": 1.126,
+        "peak_reserved_gib": 1.141
+      },
+      {
+        "weight_reloads": 2,
+        "sleep_calls": 2,
+        "inter_turn_sleeps": 1,
+        "weight_reload_ms": [
+          310.064,
+          325.209
+        ],
+        "sleep_ms": [
+          292.311,
+          279.593
+        ],
+        "generation_ms": [
+          877.643,
+          1326.633
+        ],
+        "generated_tokens": [
+          9,
+          12
+        ],
+        "rollout_ms": 3412.951,
+        "peak_allocated_gib": 1.126,
+        "peak_reserved_gib": 1.141
+      },
+      {
+        "weight_reloads": 2,
+        "sleep_calls": 2,
+        "inter_turn_sleeps": 1,
+        "weight_reload_ms": [
+          1967.647,
+          1721.507
+        ],
+        "sleep_ms": [
+          1688.231,
+          304.006
+        ],
+        "generation_ms": [
+          5834.144,
+          1118.795
+        ],
+        "generated_tokens": [
+          9,
+          12
+        ],
+        "rollout_ms": 12640.756,
+        "peak_allocated_gib": 1.126,
+        "peak_reserved_gib": 1.141
+      }
+    ],
+    "fixed_resident_during_rollout": [
+      {
+        "weight_reloads": 1,
+        "sleep_calls": 1,
+        "inter_turn_sleeps": 0,
+        "weight_reload_ms": [
+          318.849
+        ],
+        "sleep_ms": [
+          275.093
+        ],
+        "generation_ms": [
+          492.799,
+          689.005
+        ],
+        "generated_tokens": [
+          9,
+          12
+        ],
+        "rollout_ms": 1777.033,
+        "peak_allocated_gib": 1.126,
+        "peak_reserved_gib": 1.141
+      },
+      {
+        "weight_reloads": 1,
+        "sleep_calls": 1,
+        "inter_turn_sleeps": 0,
+        "weight_reload_ms": [
+          342.254
+        ],
+        "sleep_ms": [
+          583.8
+        ],
+        "generation_ms": [
+          1034.65,
+          1981.041
+        ],
+        "generated_tokens": [
+          9,
+          12
+        ],
+        "rollout_ms": 3944.057,
+        "peak_allocated_gib": 1.126,
+        "peak_reserved_gib": 1.141
+      },
+      {
+        "weight_reloads": 1,
+        "sleep_calls": 1,
+        "inter_turn_sleeps": 0,
+        "weight_reload_ms": [
+          329.841
+        ],
+        "sleep_ms": [
+          262.848
+        ],
+        "generation_ms": [
+          510.467,
+          601.014
+        ],
+        "generated_tokens": [
+          9,
+          12
+        ],
+        "rollout_ms": 1705.527,
+        "peak_allocated_gib": 1.126,
+        "peak_reserved_gib": 1.141
+      }
+    ]
+  },
+  "summary": {
+    "affected_reload_each_turn": {
+      "median_rollout_ms": 3412.951,
+      "median_generation_ms_per_turn": [
+        877.643,
+        1118.795
+      ],
+      "median_weight_reload_ms": 647.142,
+      "max_peak_allocated_gib": 1.126
+    },
+    "fixed_resident_during_rollout": {
+      "median_rollout_ms": 1777.033,
+      "median_generation_ms_per_turn": [
+        510.467,
+        689.005
+      ],
+      "median_weight_reload_ms": 329.841,
+      "max_peak_allocated_gib": 1.126
+    }
+  },
+  "scope": "Uses real Qwen3 inference on CUDA and measures actual CPU/GPU weight transfers. Each policy is warmed up before measurements. This emulates the sleep/reload lifecycle; it does not execute vLLM, GRPOTrainer, or the upstream fix."
+}

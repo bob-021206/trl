@@ -1,0 +1,32 @@
+{
+  "task": "Qwen3-0.6B LoRA/GRPO synthetic arithmetic training",
+  "model": "models/Qwen3-0.6B",
+  "model_revision": null,
+  "gpu": "NVIDIA GeForce RTX 3060",
+  "torch": "2.13.0+cu130",
+  "dtype": "bfloat16",
+  "vllm_mode": "colocate",
+  "vllm_enable_sleep_mode": true,
+  "training": {
+    "requested_steps": 10,
+    "completed_steps": 10,
+    "duration_ms": 12211.832,
+    "median_step_ms": 1154.714,
+    "step_times_ms": [
+      1728.753,
+      1154.168,
+      1134.672,
+      1231.744,
+      1134.761,
+      1156.142,
+      1158.426,
+      1138.417,
+      1155.26,
+      1138.169
+    ],
+    "peak_allocated_gib": 5.67,
+    "peak_reserved_gib": 6.545,
+    "train_loss": 0.0
+  },
+  "output_dir": "HPML_WORK/linux/results/interactive-training"
+}

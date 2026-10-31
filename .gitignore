@@ -93,6 +93,10 @@ celerybeat-schedule
 
 # virtualenv
 .venv
+.venv-hpml/
+.venv-issue7429/
+.venv-issue7429/
+/models/
 venv/
 ENV/
 
