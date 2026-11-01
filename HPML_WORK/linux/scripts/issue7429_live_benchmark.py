@@ -111,7 +111,7 @@ def main():
             tool_result_ids = tokenizer.encode("\nCPU tool result: ok.\n", add_special_tokens=False)
             for turn in range(args.turns):
                 started_at = time.perf_counter()
-                _, generated_ids, generated_logprobs, _, _ = trainer.vllm_generation.generate(
+                _, generated_ids, generated_logprobs, _ = trainer.vllm_generation.generate(
                     [current_ids], images=None, num_generations=1
                 )
                 turn_times.append((time.perf_counter() - started_at) * 1000)
