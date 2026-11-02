@@ -1814,6 +1814,7 @@ class TestGRPOTrainer(TrlTestCase):
 
         # Enable the correction after construction so that no vLLM server is required.
         trainer.use_vllm = True
+        trainer.vllm_generation = MagicMock()
         trainer.vllm_importance_sampling_correction = True
         trainer.vllm_importance_sampling_mode = vllm_importance_sampling_mode
 
@@ -3374,11 +3375,15 @@ class TestGRPOTrainer(TrlTestCase):
 
         trainer.use_vllm = True
         trainer._last_loaded_step = trainer.state.global_step
-        trainer.vllm_generation = SimpleNamespace(sync_weights=MagicMock(), generate=fake_server_generate)
+        trainer.vllm_generation = SimpleNamespace(
+            sync_weights=MagicMock(), generate=fake_server_generate, sleep=MagicMock()
+        )
         trainer.train()
 
         assert trainer.state.log_history[-1]["train_loss"] is not None
         assert trainer.state.log_history[-1]["tools/call_frequency"] == pytest.approx(2 / 3)
+        # Each rollout has two turns but must only sleep once
+        assert trainer.vllm_generation.sleep.call_count == trainer.state.global_step
 
     @pytest.mark.skipif(
         Version(transformers.__version__) < Version("5.13.0.dev0"),
