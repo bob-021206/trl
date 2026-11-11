@@ -8,4 +8,4 @@ Project proposal and role assignments are in [`shared/docs`](./shared/docs/). Pl
 - The Insomnia Slurm training/benchmark job is [`insomnia_grpo_benchmark.sbatch`](./linux/scripts/insomnia_grpo_benchmark.sbatch).
 
 Run commands from the repository root. Model files default to `models/Qwen3-0.6B`, and benchmark outputs are saved under the matching platform's `results` folder.
-- Benchmark datasets (W1 chain arithmetic, W2 multi-hop retrieval) and their generators are in [`data`](./data/).
+- Benchmark datasets (W1 chain arithmetic, W2 multi-hop retrieval) and their generators are in [`data_prepare`](./data_prepare/).
