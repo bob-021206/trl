@@ -236,17 +236,12 @@ def main():
 
     counts = {(result["syncs"], result["sleeps"], result["sleeps_after_rollout"]) for result in results}
     behavior = (
-        "buggy"
-        if counts == {(args.turns, args.turns, 0)}
-        else "fixed"
-        if counts == {(1, 0, 1)}
-        else "unexpected"
+        "buggy" if counts == {(args.turns, args.turns, 0)} else "fixed" if counts == {(1, 0, 1)} else "unexpected"
     )
     summary = {
         "median_rollout_ms": round(statistics.median(result["rollout_ms"] for result in results), 3),
         "median_turn_ms": [
-            round(statistics.median(result["turn_ms"][turn] for result in results), 3)
-            for turn in range(args.turns)
+            round(statistics.median(result["turn_ms"][turn] for result in results), 3) for turn in range(args.turns)
         ],
         "max_peak_allocated_gib": max(result["peak_allocated_gib"] for result in results),
         "max_peak_reserved_gib": max(result["peak_reserved_gib"] for result in results),

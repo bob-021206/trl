@@ -759,9 +759,9 @@ class VLLMGeneration:
         """Release the GPU memory held by the colocated vLLM engine.
 
         `generate()` leaves the engine awake so that the turns of a rollout don't reload the same weights: call this
-        once the rollout is over. Sleep level 2 discards the weights, so the next `sync_weights()` or `generate()` wakes
-        the engine and pushes them again. Does nothing outside colocate mode, without sleep mode, or if the weights are
-        already asleep.
+        once the rollout is over. Sleep level 2 discards the weights, so the next `sync_weights()` or `generate()`
+        wakes the engine and pushes them again. Does nothing outside colocate mode, without sleep mode, or if the
+        weights are already asleep.
         """
         if self.mode == "colocate" and self.enable_sleep_mode and not self._llm_weights_sleeping:
             self.llm.sleep(level=2)
