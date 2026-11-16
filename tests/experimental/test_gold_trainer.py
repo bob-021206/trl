@@ -367,6 +367,7 @@ class RecordingVLLMGeneration:
         self.completion_ids = processing_class.encode("C", add_special_tokens=False)
         self.prompts = None
         self.sync_calls = 0
+        self.sleep_calls = 0
 
     def sync_weights(self):
         self.sync_calls += 1
@@ -374,6 +375,9 @@ class RecordingVLLMGeneration:
     def generate(self, prompts, images, num_generations):
         self.prompts = prompts
         return None, [self.completion_ids] * len(prompts), None, None
+
+    def sleep(self):
+        self.sleep_calls += 1
 
 
 def _gold_vllm_trainer(monkeypatch, tmp_path, **config_kwargs):
@@ -425,6 +429,7 @@ def test_generate_on_policy_for_slices_uses_prompt_attention_mask_for_vllm_promp
 
     assert trainer.vllm_generation.prompts == [[a, pad, b]]
     assert trainer.vllm_generation.sync_calls == 1
+    assert trainer.vllm_generation.sleep_calls == 1
     buffered_inputs = trainer._buffered_inputs[0]
     assert buffered_inputs["input_ids"].tolist() == [[a, pad, b, *completion_ids]]
     assert buffered_inputs["original_prompt_text"] == ["A<|endoftext|>B"]
@@ -2054,6 +2059,9 @@ def test_on_policy_vlm_vllm_does_not_duplicate_repeated_sampler_batch(monkeypatc
             received["images"] = images
             return None, [[100 + i, self.eos_token_id] for i in range(len(prompts))], None, None
 
+        def sleep(self):
+            received["slept"] = True
+
     monkeypatch.setattr(gold_trainer_module, "is_vllm_available", lambda: True)
     monkeypatch.setattr(gold_trainer_module, "VLLMGeneration", RecordingVLLMGeneration)
     trainer = GOLDTrainer(
@@ -2088,6 +2096,7 @@ def test_on_policy_vlm_vllm_does_not_duplicate_repeated_sampler_batch(monkeypatc
     total_sampled_prompts = num_slices * num_generations
     assert len(received["prompts"]) == total_sampled_prompts
     assert len(received["images"]) == total_sampled_prompts
+    assert received["slept"]
     # Each prompt arrives once per generation, already repeated by the sampler, not duplicated again
     for i, prompt in enumerate(received["prompts"]):
         assert prompt == received["prompts"][i - i % num_generations]
