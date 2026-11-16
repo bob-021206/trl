@@ -267,21 +267,23 @@ class TestVLLMSleep(TrlTestCase):
 
     def test_distillation_sleeps_before_scoring(self, llm):
         dataset = load_dataset("trl-internal-testing/zen", "standard_prompt_only", split="train")
-        trainer = DistillationTrainer(
-            model=MODEL_ID,
-            teacher_model=MODEL_ID,
-            args=DistillationConfig(
-                output_dir=self.tmp_dir,
-                use_vllm=True,
-                vllm_mode="colocate",
-                vllm_enable_sleep_mode=True,
-                per_device_train_batch_size=2,
-                max_steps=1,
-                save_strategy="no",
-                report_to="none",
-            ),
-            train_dataset=dataset,
-        )
+        # Unlike GRPO and RLOO, the distillation trainer checks for vLLM itself
+        with patch("trl.trainer.distillation_trainer.is_vllm_available", return_value=True):
+            trainer = DistillationTrainer(
+                model=MODEL_ID,
+                teacher_model=MODEL_ID,
+                args=DistillationConfig(
+                    output_dir=self.tmp_dir,
+                    use_vllm=True,
+                    vllm_mode="colocate",
+                    vllm_enable_sleep_mode=True,
+                    per_device_train_batch_size=2,
+                    max_steps=1,
+                    save_strategy="no",
+                    report_to="none",
+                ),
+                train_dataset=dataset,
+            )
         calls, _ = record_engine(trainer, llm)
 
         trainer.train()
