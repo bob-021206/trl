@@ -1,0 +1,10 @@
+{
+  "variants": ["baseline", "awake", "awake_cache"],
+  "seeds": [0, 1, 2],
+  "K": [2, 4, 8],
+  "L_obs": [64, 256],
+  "P": [256],
+  "max_steps": 15,
+  "warmup_steps": 3,
+  "note": "54 configs; pilot first. Set an agreed model+immutable revision, batch, LoRA rank and memory budget in a copied base config."
+}

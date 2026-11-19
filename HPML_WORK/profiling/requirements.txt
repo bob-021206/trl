@@ -1,0 +1,3 @@
+# Add-ons only: reuse Yuyun's CUDA/TRL environment and Yidan's workload packages.
+matplotlib>=3.9
+nvidia-ml-py>=12.560.30
