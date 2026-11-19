@@ -1,16 +1,13 @@
 #!/usr/bin/env bash
-
-cd /workspace/trl
-
 set -euo pipefail
 
-export HPML_REPO="$PWD"
+# Prepare the current checkout. Older baseline commits do not contain this harness.
+export HPML_REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$HPML_REPO"
+
 export HPML_WORK_DIR="$HPML_REPO/HPML_WORK"
 export HPML_DATA_DIR="$HPML_WORK_DIR/data_prepare"
 export PYTHON=python3.12
-
-git fetch origin
-git switch -c ann-run-baseline d5c8d4c38c17d38de8938eed3c1d3a1df5298a91
 
 export HPML_RUN_DIR="$HPML_WORK_DIR/linux/results/manual-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$HPML_RUN_DIR"/{baseline,fixed}
@@ -25,6 +22,7 @@ source "$HPML_REPO/.venv-issue7429/bin/activate"
 
 python -m pip install \
   "transformers==5.19.0" "peft==0.21.2" "bm25s==0.3.16"
+python -m pip install -r "$HPML_WORK_DIR/profiling/requirements.txt"
 python -m pip check
 python -m pip freeze > "$HPML_RUN_DIR/environment.txt"
 
@@ -39,4 +37,7 @@ bash "$HPML_DATA_DIR/generate_all.sh" --install
 deactivate
 
 source "$HPML_REPO/.venv-issue7429/bin/activate"
+
+# When invoked with bash, activation above applies only to this script's process.
+printf '\nPreparation complete. In your terminal, run:\n  cd "%s"\n  source .venv-issue7429/bin/activate\n  python -m HPML_WORK.profiling.run --dry-run\n' "$HPML_REPO"
 
