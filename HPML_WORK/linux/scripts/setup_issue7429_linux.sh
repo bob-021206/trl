@@ -67,7 +67,7 @@ if [ ! -f "$python_include/Python.h" ]; then
     fi
 fi
 
-cuda_version=“$(nvcc -v | grep -oP 'release \K[0-9]+\.[0-9]+')”
+cuda_version=“$(nvcc -V | grep -oP 'release \K[0-9]+\.[0-9]+')”
 case "$cuda_version" in
     12.9)
         torch_index="https://download.pytorch.org/whl/cu129"
