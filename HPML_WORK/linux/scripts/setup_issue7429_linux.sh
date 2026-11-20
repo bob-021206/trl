@@ -4,7 +4,6 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$repo_root"
 
-export PIP_INDEX_URL="https://pypi.tuna.tsinghua.edu.cn/simple"
 export PIP_DEFAULT_TIMEOUT=60
 
 if ! command -v nvidia-smi >/dev/null 2>&1; then
@@ -68,7 +67,7 @@ if [ ! -f "$python_include/Python.h" ]; then
     fi
 fi
 
-cuda_version="$(nvidia-smi | sed -n 's/.*CUDA Version: \([0-9][0-9]*\.[0-9][0-9]*\).*/\1/p' | head -n 1)"
+cuda_version=13.0   # Use your desired CUDA version here (e.g., 12.9, 13.0, etc.)
 case "$cuda_version" in
     12.9)
         torch_index="https://download.pytorch.org/whl/cu129"
