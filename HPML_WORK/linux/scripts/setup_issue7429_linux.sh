@@ -67,7 +67,7 @@ if [ ! -f "$python_include/Python.h" ]; then
     fi
 fi
 
-cuda_version=13.0   # Use your desired CUDA version here (e.g., 12.9, 13.0, etc.)
+cuda_version=“$(nvcc -v | grep -oP 'release \K[0-9]+\.[0-9]+')”
 case "$cuda_version" in
     12.9)
         torch_index="https://download.pytorch.org/whl/cu129"
