@@ -1,0 +1,6 @@
+# Data generation and checks only (CPU). Token counts depend on the tokenizer version, so these are pinned.
+transformers==5.22.2
+tokenizers==0.23.3
+datasets==5.1.0
+jinja2==3.1.6
+bm25s==0.3.16

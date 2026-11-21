@@ -1,0 +1,3 @@
+# Install a CUDA-enabled PyTorch build first; see scripts/setup_issue7429_windows.ps1.
+-e .[peft]
+matplotlib>=3.9

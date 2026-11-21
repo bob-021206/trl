@@ -1,0 +1,3 @@
+# Setup selects CUDA-matched PyTorch/vLLM wheels before installing these requirements.
+-e .[peft]
+matplotlib>=3.9
