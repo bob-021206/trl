@@ -67,7 +67,14 @@ if [ ! -f "$python_include/Python.h" ]; then
     fi
 fi
 
-cuda_version=“$(nvcc -V | grep -oP 'release \K[0-9]+\.[0-9]+')”
+# Wheels bundle the CUDA runtime; select a build supported by the driver.
+cuda_version="${HPML_CUDA_VERSION:-}"
+if [ -z "$cuda_version" ]; then
+    if ! cuda_version="$(nvidia-smi | sed -n 's/.*CUDA Version: \([0-9][0-9]*\.[0-9][0-9]*\).*/\1/p' | head -n 1)"; then
+        echo "Could not query the NVIDIA driver with nvidia-smi. Check GPU access and driver installation." >&2
+        exit 1
+    fi
+fi
 case "$cuda_version" in
     12.9)
         torch_index="https://download.pytorch.org/whl/cu129"
@@ -79,7 +86,8 @@ case "$cuda_version" in
         torchcodec_version="0.16.0+cu130"
         ;;
     *)
-        echo "Unsupported or undetected CUDA driver version: '${cuda_version:-unknown}'. Supported versions are 12.9 and 13.0." >&2
+        echo "Unsupported or undetected CUDA version: '${cuda_version:-unknown}'. Supported wheel builds are 12.9 and 13.0." >&2
+        echo "Set HPML_CUDA_VERSION to a supported build compatible with your NVIDIA driver." >&2
         exit 1
         ;;
 esac
@@ -99,7 +107,7 @@ python -m pip install -r HPML_WORK/linux/requirements.txt
 python -m pip install --force-reinstall --no-deps \
     --index-url "$torch_index" "torchcodec==$torchcodec_version"
 
-EXPECTED_CUDA_VERSION="$cuda_version" python -c 'import os, torch, torchcodec, vllm; from trl.import_utils import is_vllm_available; expected_cuda = os.environ["EXPECTED_CUDA_VERSION"]; assert torch.version.cuda and torch.version.cuda.startswith(expected_cuda), f"PyTorch CUDA {torch.version.cuda} does not match driver CUDA {expected_cuda}"; assert torch.cuda.is_available(), "CUDA GPU is not visible to PyTorch"; assert is_vllm_available(), "vLLM failed to import"; print("GPU:", torch.cuda.get_device_name(0)); print("PyTorch:", torch.__version__); print("PyTorch CUDA:", torch.version.cuda); print("TorchCodec:", torchcodec.__version__); print("vLLM:", vllm.__version__)'
-export HF_ENDPOINT="${HF_ENDPOINT:-https://hf-mirror.com}"
+EXPECTED_CUDA_VERSION="$cuda_version" python -c 'import os, torch, torchcodec, vllm; from trl.import_utils import is_vllm_available; expected_cuda = os.environ["EXPECTED_CUDA_VERSION"]; assert torch.version.cuda and torch.version.cuda.startswith(expected_cuda), f"PyTorch CUDA {torch.version.cuda} does not match selected CUDA build {expected_cuda}"; assert torch.cuda.is_available(), "CUDA GPU is not visible to PyTorch"; assert is_vllm_available(), "vLLM failed to import"; print("GPU:", torch.cuda.get_device_name(0)); print("PyTorch:", torch.__version__); print("PyTorch CUDA:", torch.version.cuda); print("TorchCodec:", torchcodec.__version__); print("vLLM:", vllm.__version__)'
+export HF_ENDPOINT="${HF_ENDPOINT:-https://huggingface.co}"
 export HF_HUB_DISABLE_XET=1
 python HPML_WORK/shared/scripts/download_qwen3.py --local-dir models/Qwen3-0.6B

@@ -46,6 +46,8 @@ Run the following **Bash commands from the `trl/` repository root**. GPU runs re
 
 For a **fresh machine**, run `bash HPML_WORK/profiling/prep.sh` once. It recreates the training environment and generates the data.
 
+Setup detects Python 3.11+ and the driver's CUDA version through `nvidia-smi` (supported wheel builds: 12.9 and 13.0). Optional `PYTHON` and `HPML_CUDA_VERSION` environment variables override those choices. Both environments use the selected Python; the package snapshot is saved to the ignored `runs/setup-*/environment.txt`.
+
 For an already prepared machine, activate the existing environment:
 
 ```bash
